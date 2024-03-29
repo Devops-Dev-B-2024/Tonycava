@@ -66,7 +66,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker tags myimage:latest tonycava/tp-docker-app:${{ steps.commit_sha.outputs.sha_short }}
+          docker tag myimage:latest tonycava/tp-docker-app:${{ steps.commit_sha.outputs.sha_short }}
           docker push tonycava/tp-docker-app:${{ steps.commit_sha.outputs.sha_short }}
 
   integration-test:
