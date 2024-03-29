@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          tags: myimage:${sha_short}
+          tags: myimage:latest
           outputs: type=docker,dest=/tmp/myimage.tar
       - name: Upload artifact
         uses: actions/upload-artifact@v3
