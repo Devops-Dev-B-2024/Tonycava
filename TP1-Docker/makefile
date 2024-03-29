@@ -1,2 +1,2 @@
 lint:
-    echo "Hello, world!"
+	echo "Hello word"
