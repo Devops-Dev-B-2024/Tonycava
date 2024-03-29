@@ -27,7 +27,7 @@ jobs:
         run: |
           echo $GITHUB_ENV
           cd TP1-Docker/ && git checkout $GITHUB_REF_NAME
-          docker build -f Dockerfile.app -t tonycava/app .
+          docker build -f Dockerfile.app -t tonycava/app:{{ env.sha_sort }} .
 
   integration-test:
     runs-on: ubuntu-latest
