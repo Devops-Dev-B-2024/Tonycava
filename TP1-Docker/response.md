@@ -34,3 +34,11 @@ docker run --name tp-phpmyadmin -d --network tp-docker-mysql-phpmyadmin -e PMA_H
 docker run is used to run one container per one per container docker compose can be used to create many container at once
 and be more declarative about it, docker run is more imperative
 ```
+
+```bash
+docker compose up # Launch container
+```
+
+```bash
+docker compose down # Stop container
+```
