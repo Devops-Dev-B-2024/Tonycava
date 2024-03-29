@@ -20,3 +20,12 @@ to update file inside the docker container instead COPY i used to just copy file
 
 The two can do the same things but have different use case
 ```
+
+```bash
+docker network create tp-docker-mysql-phpmyadmin
+```
+
+```bash
+docker run --name tp-mysql -d --network tp-docker-mysql-phpmyadmin -e MYSQL_ROOT_PASSWORD=root mysql
+docker run --name tp-phpmyadmin -d --network tp-docker-mysql-phpmyadmin -e PMA_HOST=tp-mysql -p 8081:80 phpmyadmin/phpmyadmin
+```
