@@ -1,9 +1,12 @@
 name: TP Docker
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+    branches:
+      - main
 
 permissions:
-  pull-requests: read|write
+  pull-requests: write
 
 jobs:
   lint:
@@ -17,12 +20,10 @@ jobs:
         uses: actions/setup-node@v2
 
       - name: Run linting backend
-        run: |
-          cd TP1-Docker/ && git checkout $GITHUB_REF_NAME
-          echo "Lint"
+        run: echo "Lint"
 
   build:
-    name: Build DOcker Image
+    name: Build Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -92,17 +93,29 @@ jobs:
 
       - name: Run integration tests
         run: cd TP1-Docker/ && yarn test
-  test:
-    name: test
+
+  analyze:
+    name: Analyze Image
     runs-on: ubuntu-latest
+    needs: push
     steps:
+      - name: Get short commit SHA
+        id: commit_sha
+        run: echo "::set-output name=sha_short::${GITHUB_SHA::5}"
+
+      - name: Log into Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Docker Scout
         id: docker-scout
         if: ${{ github.event_name == 'pull_request' }}
         uses: docker/scout-action@v1
         with:
           command: cves,quickview
-          image: tonycava/tp-docker-app:a22ee
+          image: tonycava/tp-docker-app:${{ steps.commit_sha.outputs.sha_short }}
           only-severities: critical,high
           write-comment: true
           github-token: ${{ secrets.TOKEN }} # to be able to write the comment
