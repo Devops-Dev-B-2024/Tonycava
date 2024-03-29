@@ -42,3 +42,23 @@ docker compose up # Launch container
 ```bash
 docker compose down # Stop container
 ```
+
+```text
+Nous avons une erreur du docker daemon et l'application ne pourra pas se lancer
+```
+
+```text
+Nous devons utiliser le tag --production ou --omit=dev
+```
+
+````text
+Pour baisser le poid de notre image et ne pas installer de dépendance inutiles en production
+````
+
+````text
+Nous pouvons utiliser les commandes comme docker scout et docker scan et ne pas publier de port inutile comme les ports de base de données
+````
+
+```text
+Car chaque container a son propre localhost et ne peut pas communiquer nativement avec les autres containers
+```
