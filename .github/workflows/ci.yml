@@ -1,0 +1,108 @@
+name: TP Docker
+
+on: [ push, pull_request ]
+
+permissions:
+  pull-requests: read|write
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint
+        uses: actions/setup-node@v2
+
+      - name: Run linting backend
+        run: |
+          cd TP1-Docker/ && git checkout $GITHUB_REF_NAME
+          echo "Lint"
+
+  build:
+    name: Build DOcker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and export
+        uses: docker/build-push-action@v5
+        with:
+          context: ./TP1-Docker
+          tags: myimage:latest
+          file: TP1-Docker/Dockerfile.app
+          outputs: type=docker,dest=/tmp/myimage.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: myimage
+          path: /tmp/myimage.tar
+
+
+
+  push:
+    name: Push Docker Image
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: myimage
+          path: /tmp
+
+      - name: Load image
+        run: docker load --input /tmp/myimage.tar
+
+      - name: Log into Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Get short commit SHA
+        id: commit_sha
+        run: echo "::set-output name=sha_short::${GITHUB_SHA::5}"
+
+      - name: Push Docker image
+        run: |
+          docker tag myimage:latest tonycava/tp-docker-app:${{ steps.commit_sha.outputs.sha_short }}
+          docker push tonycava/tp-docker-app:${{ steps.commit_sha.outputs.sha_short }}
+
+  integration-test:
+    name: Integration test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: cd TP1-Docker/ && yarn install
+
+      - name: Run integration tests
+        run: cd TP1-Docker/ && yarn test
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker Scout
+        id: docker-scout
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: docker/scout-action@v1
+        with:
+          command: cves,quickview
+          image: tonycava/tp-docker-app:a22ee
+          only-severities: critical,high
+          write-comment: true
+          github-token: ${{ secrets.TOKEN }} # to be able to write the comment
