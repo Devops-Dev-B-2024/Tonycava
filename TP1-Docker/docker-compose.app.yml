@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app2
+    ports:
+      - "3000:3000"
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    depends_on:
+      - tp-mysql
+
+  tp-mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: tp
+      MYSQL_ROOT_PASSWORD: root
