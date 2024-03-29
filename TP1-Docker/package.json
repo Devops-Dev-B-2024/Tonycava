@@ -1,7 +1,7 @@
 {
-  "name": "First",
+  "name": "first",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "repository": "git@github.com:Devops-Dev-B-2024/Tonycava.git",
   "author": "tonycava <anthony.cavge@gmail.com>",
   "license": "MIT",
@@ -10,13 +10,15 @@
     "postinstall": "npx prisma generate",
     "prestart": "npx prisma db push",
     "start": "node app.js",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint . --ext .js,.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.11.0",
     "express": "^4.19.2"
   },
   "devDependencies": {
+    "eslint": "^8.57.0",
     "prisma": "^5.11.0",
     "vitest": "^1.4.0"
   }

@@ -1,5 +1,5 @@
 import express from "express";
-import {PrismaClient} from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
 
@@ -9,14 +9,10 @@ const prisma = new PrismaClient()
 
 app.get("/", async (req, res) => {
     const user = await prisma.user.create({
-        data: {
-            username: (Math.random() * 100).toString()
-        }
+        data: {username: (Math.random() * 100).toString()}
     })
     console.log(user)
-    res.send({
-        user
-    })
+    res.send({ user })
 })
 
 app.listen(PORT, () => {
