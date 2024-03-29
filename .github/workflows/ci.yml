@@ -31,7 +31,7 @@ jobs:
         with:
           context: .
           tags: myimage:latest
-          file: Dockerfile.app
+          file: TP1-Docker/Dockerfile.app
           outputs: type=docker,dest=/tmp/myimage.tar
       - name: Upload artifact
         uses: actions/upload-artifact@v3
