@@ -29,3 +29,8 @@ docker network create tp-docker-mysql-phpmyadmin
 docker run --name tp-mysql -d --network tp-docker-mysql-phpmyadmin -e MYSQL_ROOT_PASSWORD=root mysql
 docker run --name tp-phpmyadmin -d --network tp-docker-mysql-phpmyadmin -e PMA_HOST=tp-mysql -p 8081:80 phpmyadmin/phpmyadmin
 ```
+
+```text
+docker run is used to run one container per one per container docker compose can be used to create many container at once
+and be more declarative about it, docker run is more imperative
+```
